@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		名称：<input type="text" name="" id="gsname" value="" /><br>
+		单价：<input type="text" name="" id="gspri" value="" /><br>
+		种类：<select><br>
+			<option value="蔬菜">蔬菜</option>
+			<option value="肉类">肉类</option>
+			<option value="水果">水果</option>
+		    </select><br>
+		
+		<button type="button" id="add">添 加</button><br>
+		<button type="button" onclick="show('all')">全部商品</button>
+		<button type="button" onclick="show('蔬菜')">蔬 菜</button>
+		<button type="button" onclick="show('肉类')">肉 类</button>
+		<button type="button" onclick="show('水果')">水 果</button>
+		<table >
+			<thead><tr>
+				<th><input type="checkbox" id=""  /></th>
+				<th>名称</th>
+				<th>单价</th>
+				<th>类别</th>
+				<th>操作</th>
+				</tr></thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</body>
+	<script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$("#add").click(function(){
+			$.ajax({
+				type:"post",
+				url:"http://localhost:8080/add",
+				data:{
+					gsname:$("#gsname").val(),
+					gspri:$("#gspri").val(),
+					gstype:$("select").val()
+				},
+				success(res){
+					console.log(res)
+					show()
+				}
+			})
+		})
+		function show(fl){
+			$.ajax({
+				type:"get",
+				url:"http://localhost:8080/getdata",
+				data:{
+					gstype:fl
+				},
+				success(res){
+					var str=""
+					for (var i = 0; i < res.length; i++) {
+						str+=`
+						<tr>
+						<td><input type="checkbox"/></td>
+						<td>${res[i].gsname}</td>
+						<td>${res[i].gspri}</td>
+						<td>${res[i].gstype}</td>
+						<td><a href="####" onclick=del() >删除</a> <a href="####">修改</a></td>
+						</tr>
+						`
+					}
+					$("tbody").html(str)
+				}
+			})
+		}
+		show()
+	</script>
+</html>
